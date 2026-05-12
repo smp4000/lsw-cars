@@ -16,6 +16,10 @@
   const COOKIE_KEY = 'lsw_cookie_consent_v1';
   const banner = document.getElementById('cookieBanner');
 
+  const setBannerOpen = (open) => {
+    document.body.classList.toggle('cookie-banner-open', open);
+  };
+
   const readConsent = () => {
     try { return JSON.parse(localStorage.getItem(COOKIE_KEY) || 'null'); }
     catch { return null; }
@@ -25,11 +29,15 @@
     const data = { level, ts: Date.now() };
     localStorage.setItem(COOKIE_KEY, JSON.stringify(data));
     if (banner) banner.hidden = true;
+    setBannerOpen(false);
     document.dispatchEvent(new CustomEvent('lsw:consent', { detail: data }));
   };
 
   if (banner) {
-    if (!readConsent()) banner.hidden = false;
+    if (!readConsent()) {
+      banner.hidden = false;
+      setBannerOpen(true);
+    }
     banner.querySelectorAll('[data-cookie]').forEach(btn => {
       btn.addEventListener('click', () => writeConsent(btn.dataset.cookie));
     });
@@ -40,6 +48,7 @@
     cookieSettingsLink.addEventListener('click', (e) => {
       e.preventDefault();
       banner.hidden = false;
+      setBannerOpen(true);
     });
   }
 

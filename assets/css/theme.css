@@ -398,6 +398,77 @@ a:hover { color: var(--c-gold-2); }
   text-transform: uppercase;
 }
 
+/* ===== WhatsApp Floating Action Button =================================== */
+.whatsapp-fab {
+  position: fixed;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  z-index: 90;
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  padding: .85rem 1.25rem .85rem 1rem;
+  background: #25D366;
+  color: #fff;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: .95rem;
+  text-decoration: none;
+  box-shadow:
+    0 10px 28px -8px rgba(37, 211, 102, .55),
+    0 4px 10px -4px rgba(0, 0, 0, .35);
+  transition: transform .2s ease, box-shadow .2s ease, background .2s ease, bottom .3s ease;
+  isolation: isolate;
+}
+.whatsapp-fab:hover {
+  transform: translateY(-2px) scale(1.03);
+  background: #1fbf5a;
+  color: #fff;
+  box-shadow:
+    0 14px 32px -8px rgba(37, 211, 102, .75),
+    0 6px 12px -4px rgba(0, 0, 0, .45);
+}
+.whatsapp-fab svg { flex-shrink: 0; }
+
+/* Pulsierender „Heartbeat" als Aufmerksamkeitssignal */
+.whatsapp-fab::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: #25D366;
+  z-index: -1;
+  animation: wa-pulse 2.4s ease-out infinite;
+}
+@keyframes wa-pulse {
+  0%   { transform: scale(1);   opacity: .55; }
+  70%  { transform: scale(1.45); opacity: 0; }
+  100% { transform: scale(1.45); opacity: 0; }
+}
+
+/* Bei sichtbarem Cookie-Banner Button nach oben rücken,
+   damit er nicht vom Banner verdeckt wird */
+body.cookie-banner-open .whatsapp-fab { bottom: 9rem; }
+
+/* Mobile: nur das Icon zeigen */
+@media (max-width: 600px) {
+  .whatsapp-fab {
+    padding: 1rem;
+    right: 1rem; bottom: 1rem;
+    width: 56px; height: 56px;
+    justify-content: center;
+  }
+  .whatsapp-fab-text { display: none; }
+  body.cookie-banner-open .whatsapp-fab { bottom: 11rem; }
+}
+
+/* Reduzierte Animationen respektieren */
+@media (prefers-reduced-motion: reduce) {
+  .whatsapp-fab::before { animation: none; }
+  .whatsapp-fab { transition: none; }
+}
+
 /* ===== Service-Karten (Dienstleistung) =================================== */
 .service-grid {
   display: grid;

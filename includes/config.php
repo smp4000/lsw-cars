@@ -52,6 +52,9 @@ defined('COMPANY_STREET') or define('COMPANY_STREET', 'Petersbergstr. 101');
 defined('COMPANY_ZIP')    or define('COMPANY_ZIP',    '36100');
 defined('COMPANY_CITY')   or define('COMPANY_CITY',   'Petersberg');
 defined('COMPANY_PHONE')  or define('COMPANY_PHONE',  '015567 233437');
+// Internationale WhatsApp-Nummer ohne führende 0, ohne + und ohne Leerzeichen
+// (z. B. Deutschland: 49 + Mobilnummer ohne 0)
+defined('COMPANY_WHATSAPP') or define('COMPANY_WHATSAPP', '4915567233437');
 defined('COMPANY_EMAIL')  or define('COMPANY_EMAIL',  'lsw_cars@outlook.de');
 defined('COMPANY_VAT')    or define('COMPANY_VAT',    'DE000000000');
 defined('COMPANY_HRB')    or define('COMPANY_HRB',    '–');
