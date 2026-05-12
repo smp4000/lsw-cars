@@ -1,3 +1,6 @@
+# Lokale/Produktive Konfiguration (enthält Passwörter)
+/includes/config.local.php
+
 # Uploads (vom Admin hochgeladene Fahrzeugbilder)
 /uploads/*
 !/uploads/.htaccess
