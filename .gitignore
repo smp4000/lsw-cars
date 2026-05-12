@@ -1,0 +1,19 @@
+# Uploads (vom Admin hochgeladene Fahrzeugbilder)
+/uploads/*
+!/uploads/.htaccess
+
+# Legacy/lokale Datendateien
+/data/
+*.sqlite
+*.sqlite3
+*.db
+
+# IDE / OS
+.idea/
+.vscode/
+*.swp
+Thumbs.db
+.DS_Store
+
+# Logs
+*.log
