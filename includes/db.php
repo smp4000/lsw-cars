@@ -5,20 +5,28 @@ function db(): PDO {
     static $pdo = null;
     if ($pdo) return $pdo;
 
-    // 1) Verbindung ohne DB-Auswahl – Datenbank ggf. anlegen
-    $dsnServer = 'mysql:host=' . DB_HOST . ';charset=' . DB_CHARSET;
     $opts = [
         PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
         PDO::ATTR_EMULATE_PREPARES   => false,
     ];
 
-    $server = new PDO($dsnServer, DB_USER, DB_PASS, $opts);
-    $server->exec('CREATE DATABASE IF NOT EXISTS `' . DB_NAME . '` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci');
-
-    // 2) Verbindung mit Datenbank
-    $dsn = 'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=' . DB_CHARSET;
-    $pdo = new PDO($dsn, DB_USER, DB_PASS, $opts);
+    try {
+        // Auf Shared-Hostings (z. B. All-Inkl) hat der DB-User meist keine
+        // CREATE-DATABASE-Rechte. Erst direkt verbinden – nur falls die DB
+        // noch fehlt, einen Anlegeversuch unternehmen.
+        $dsn = 'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=' . DB_CHARSET;
+        $pdo = new PDO($dsn, DB_USER, DB_PASS, $opts);
+    } catch (PDOException $e) {
+        if (strpos($e->getMessage(), 'Unknown database') !== false) {
+            $dsnServer = 'mysql:host=' . DB_HOST . ';charset=' . DB_CHARSET;
+            $server = new PDO($dsnServer, DB_USER, DB_PASS, $opts);
+            $server->exec('CREATE DATABASE IF NOT EXISTS `' . DB_NAME . '` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci');
+            $pdo = new PDO($dsn, DB_USER, DB_PASS, $opts);
+        } else {
+            throw $e;
+        }
+    }
 
     ensure_schema($pdo);
     seed_if_empty($pdo);
